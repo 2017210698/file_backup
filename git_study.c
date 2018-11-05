@@ -32,15 +32,67 @@ git remote rm lwg17 删除已关联的错误远程仓库(其中，lwg17是远程
 // 不带任何参数的git push，默认只推送当前分支，这叫做simple分支。
 // git push origin master,将本地的master分支推送到origin远程主机的master分支，如果远程的master分支不存在则会被新建。
 // git push origin :master,如果省略本地分支名，则表示删除指定的远程分支，因为这等同于推送一个空的本地分支到远程分支。
-// git push origin --delete master,表示删除origin主机的master分支。
+// git push origin --delete master,表示删除origin主机的master分支。在删除远程分支时，默认的default branch不能删除，要删除的话
+// 必须在远程主机上修改default branch,方法是在远程主机上找到repositories->settings->branchs->default branch->update
 // git push origin，如果本地分支和远程origin主机分支对应，存在追踪关系，则本地分支和远程分支都可以省略。
 // git push，如果本地当前分支只有一个追踪分支，那么远程主机名也可以省略。
 // git push -u origin master,将本地的master分支推送到origin远程主机的master分支，若origin没有master分支则自动创建master
 //分支，同时指定origin为默认主机，后面就可以不加任何参数的使用git push了。不带任何参数的git push，默认只推送当前分支，simple方式。还有
 //一种matching方式，会推送所有
+3.备注：push到远程主机仓库之前，一定要git add file.txt， git commit -m"push file.txt",git push -u file_backup lwg，否则推送不上去。
+---------------------------------------------------------------------------------------------------------
+删除远程主机仓库文件的方法
+1.git rm -r --cached file -> git commit -m"delete file" -> git push file_backup lwg 删除远程主机仓库lwg分支的file文件。
+2.也可以先将要删除的远程主机文件pull下来，然后再本地删除，而后push上远程主机git pull file_backup lwg->git rm file->git commit -m"del file"->git push file_backup lwg
+--------------------------------------------
+删除本地仓库文件的方法
+1.git rm --cached file,删除的是本地仓库中的文件，且在本地工作区的文件会保留不再与远程仓库发生跟踪关系，如果本地仓库文件也要删除，则用git rm file。
+2.具体方法如下：git rm file->git add .->git commit -m"del file"->git push file_backup lwg.
+3.也可以rm file->git add.->git commit -m"del file"->git push file_backup lwg
 
-
+-------------------------------------------------------------
 
 git branch 用法
-1.git branch -r，查看远程分支。
-2.git clone git@github.com:2017210698/test.git,默认只clone远程主机的master分支，通过查看远程分支，利用git clone -b lwg17可以指定下载lwg17分支代码。
+1.git branch -r，查看远程分支。git branch -a，查看所有分支。然后直接git checkout lwg即可下载lwg分支。
+2.git clone git@github.com:2017210698/test.git,默认只clone远程主机的master分支，通过查看远程分支，
+// 利用git clone -b lwg,  git checkout lwg可以指定下载lwg分支代码。
+3.也可以先在本地建立一个分支，建议名称和远程想要同步的分支名称一样。
+// git branch lwg 建立一个名字一样的分支
+// git checkout lwg 切换到这个本地分支
+// 接下来建立上游分支的关联，由于命令较长，可以先git pull，会有提示如何关联。
+// git pull 会有提示关联方法：git branch --set-upstream-to=origin/lwg lwg,然后再git pull即可。
+4.git branch，查看创建分支。
+5.git branch -d,强行删除分支。
+6.git checkout，切换分支，git checkout -b,创建且切换分支。
+
+
+------------------------------------------------------------------
+
+1.git checkout . // 本地所有修改的，没有提交的，都返回到原来的状态。
+2.git stash //把所有没有提交的修改暂存到stash里面，可以用git stash pop恢复。
+3.git reset --hard HASH // 返回到某个节点，不保留修改。
+4.git reset --soft HASH // 返回到某个节点，保留修改。
+
+----------------------------------------------
+1.git reflog,查看所有提交的log,可以查看每次变动的版本号。
+2.git log,查看每次变动的详细情况。
+3.git checkout -- file.txt,可以放弃对没有git add.的文件的修改。若此时已经git add .,把文件放置在暂缓区了，
+可以使用git reset HEAD file.txt命令重新放入工作区，而后使用git checkout -- file.txt，放弃对其的修改。
+4.git reset --hard af1b(af1b是对应的版本号)。
+5.git diff HEAD -- file，查看最新版本的文件与之前的file文件的对比。
+
+-----------------------------------------------------------------
+生成密钥配置
+
+1.ssh -keygen -t rsa -C "youremail@example.com",默认三个回车后即可在命令目录中生成公钥.pub和私钥文件。将.pub文件复制到github上就可以了。
+2.git remote add origin git@github.com:2017210698/file_backup.git，关联本地目录到远程库。
+3.git push -u origin,第一次推送master分支中所有内容，-u参数是将本地的master分支推送到远程库中的master,且进行关联，以后可以直接git push.
+4.git clone git@github.com:2017210698/file_backup.git,可以从远程仓库克隆岛本地仓库。
+5.git merge,合并某分支到当前分支，不建议使用
+6.git log --graph,查看分支情况。
+7.在团队开发中最后分为三条分支，一条是master主分支，必须保持稳定；一条是dev分支，时开发合并的，
+在发布的时候将dev和master合并发布，而平时就可以只在个人分支和dev分支合并测试。
+8.
+
+
+
