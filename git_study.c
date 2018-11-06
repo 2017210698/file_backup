@@ -138,3 +138,11 @@ git remote rm lwg17 删除已关联的错误远程仓库(其中，lwg17是远程
 7.git push origin --tags, git push不会推送表情tag,除非使用--tags选项。
 --------------------------------------------------------------------------------
 
+git stash,当有紧急工作时，又不想commit现在做一半的工作，就用git stash，然后可以切换到其他分支进行紧急工作。
+1.当使用过一个git stash后，切换到另一个分支，且仍未完成工作，也需要保持它的工作现场，再次使用git stash，其队列中有两个工作现场。
+2.git stash list,可以查看stash队列。
+3.在一个分支上想要恢复某一个工作现场，先使用git stash list，查看工作现场队列，确定要恢复哪个工作现场到当前分支。
+	git stash list->git stash pop stash@{num},num就是你要恢复的工作现场的编号。
+4.git stash clear,可以清空stash队列。
+5.git stash pop命令是恢复stash队列中最上层的那个工作现场，num=0,stash@{0}，其对应的现场在stash中删除。
+6.git stash apply stash@{num},其不在stash队列中删除工作现场，其他同pop命令。
