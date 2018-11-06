@@ -20,6 +20,8 @@ git commit -m"the first new_branch commit"。
 
 上述1-10个步骤即是基本本地版本控制的步骤。
 接下来即是如何将本地仓库推送push到远程仓库（需要先在Github,Gitlab等之类的项目托管平台建立远程仓库）
+--------------------------------------------------------
+git push, 从本地向指定的远程仓库推送的相关操作。
 
 1.输入git remote add lwg17 git@github.com:/2017210698/test.git。如果提示"remote lwg17 already exists"，输入
 git remote rm lwg17 删除已关联的错误远程仓库(其中，lwg17是远程仓库的名称)，然后重新执行以上操作再次关联。
@@ -31,7 +33,7 @@ git remote rm lwg17 删除已关联的错误远程仓库(其中，lwg17是远程
 // git push -u lwg17 master,将本地的master分支推送到lwg17远程主机，同时指定lwg17为默认远程主机，后面可以不加任何参数。
 // 不带任何参数的git push，默认只推送当前分支，这叫做simple分支。
 // git push origin master,将本地的master分支推送到origin远程主机的master分支，如果远程的master分支不存在则会被新建。
-// git push origin :master,如果省略本地分支名，则表示删除指定的远程分支，因为这等同于推送一个空的本地分支到远程分支。
+// git push origin :master,如果省略本地分支名，则表示删除指定的远程分支，因为这等同于推送一个空的本地分支到远程分支。第一分支不可删除。
 // git push origin --delete master,表示删除origin主机的master分支。在删除远程分支时，默认的default branch不能删除，要删除的话
 // 必须在远程主机上修改default branch,方法是在远程主机上找到repositories->settings->branchs->default branch->update
 // git push origin，如果本地分支和远程origin主机分支对应，存在追踪关系，则本地分支和远程分支都可以省略。
@@ -92,7 +94,47 @@ git branch 用法
 6.git log --graph,查看分支情况。
 7.在团队开发中最后分为三条分支，一条是master主分支，必须保持稳定；一条是dev分支，时开发合并的，
 在发布的时候将dev和master合并发布，而平时就可以只在个人分支和dev分支合并测试。
-8.
 
 
+
+------------------------------------------------------------
+git remote 命令，每个远程主机都必须有一个主机名用此管理
+
+1.git remote -v/--verbose
+2.git remote add name url,增加名为name的远程仓库，一旦添加以后可以用别名代表远程版本库地址。// git remote add joey git@github.com:2017210790/file_backup.git
+3.git remote remove name // git remote remove joey
+4.git remote rename old_name new_name,// git remote rename joey nike,重新命名
+5.git remote show 主机名，// git remote show joey,查看指定主机的详细信息。
+
+----------------------------------------------------------------
+git push, 从本地向指定的远程仓库推送的相关操作。
+
+1.输入git remote add lwg17 git@github.com:/2017210698/test.git。如果提示"remote lwg17 already exists"，输入
+git remote rm lwg17 删除已关联的错误远程仓库(其中，lwg17是远程仓库的名称)，然后重新执行以上操作再次关联。
+2.输入git push -u lwg17 master,将本地仓库的master分支推送(push)到远程仓库。 // push 成功后，刷新Github，可以看到远程仓库
+//多出来刚刚push的文件。-u参数是首次push需要加。
+// git push 命令用法。 git push <远程主机名><本地分支名>：<远程分支名>
+// git push lwg17,表示将当前分支推送到lwg17远程主机对应的分支。如果lwg17当前分支只有一个追踪分支，那么主机名lwg17都可以省略
+//git push 如果当前分支与多个主机存在追踪关系，那么此时-u选项就会指定一个默认主机，后续push时就可以不加任何参数。
+// git push -u lwg17 master,将本地的master分支推送到lwg17远程主机，同时指定lwg17为默认远程主机，后面可以不加任何参数。
+// 不带任何参数的git push，默认只推送当前分支，这叫做simple分支。
+// git push origin master,将本地的master分支推送到origin远程主机的master分支，如果远程的master分支不存在则会被新建。
+// git push origin :master,如果省略本地分支名，则表示删除指定的远程分支，因为这等同于推送一个空的本地分支到远程分支。第一分支不可删除。
+// git push origin --delete master,表示删除origin主机的master分支。在删除远程分支时，默认的default branch不能删除，要删除的话
+// 必须在远程主机上修改default branch,方法是在远程主机上找到repositories->settings->branchs->default branch->update
+// git push origin，如果本地分支和远程origin主机分支对应，存在追踪关系，则本地分支和远程分支都可以省略。
+// git push，如果本地当前分支只有一个追踪分支，那么远程主机名也可以省略。
+// git push -u origin master,将本地的master分支推送到origin远程主机的master分支，若origin没有master分支则自动创建master
+//分支，同时指定origin为默认主机，后面就可以不加任何参数的使用git push了。不带任何参数的git push，默认只推送当前分支，simple方式。还有
+//一种matching方式，会推送所有
+3.git push joey,提示当前分支没有upstream分支，下面了解下什么是upstream分支， git push --set-upstream joey master
+4.如果某一个库如joey库中的分支test被push到另一个远程库，例如远程仓库server库中的分支main,那么main就是test的upstream,而test是main的downstream。
+此时，1）对于从远程库中clone或fetch得到的本地分支，都在远程库中有一个upstream分支。
+	 2）对于在本地新建的本地分支，如果执行git push origin branch_name是不会为本地分支branch_name设定远程的upstream的，
+	 	此时需要自己设定，git branch --set-upstream-to=xx(upstream分支的名称)。
+5.但是push的时候通过-u参数来设置更为方便，一旦设置成功以后可以直接用git push命令来推送了。如果当前分支与多个主机存在追踪关系，则可以使用-u选项指定一个默认主机。
+	至于其中的默认推送规则是有git config中的push.default属性决定。Git2.0以后默认规则是simple。
+6.git push --all joey(远程主机名)，将所有本地分支都推送到joey远程主机，包括本地所有分支以及商贸的修改，但假如此时服务器上的版本更新了，就可能push不成功，需要我们先更新代码。
+7.git push origin --tags, git push不会推送表情tag,除非使用--tags选项。
+--------------------------------------------------------------------------------
 
